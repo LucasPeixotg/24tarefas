@@ -6,11 +6,17 @@ const app = express()
 
 const PORT = 5000
 
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+// static files
+app.use(express.static('public'))
+app.use('/css', express.static(__dirname + 'public/css'))
+app.use('/js', express.static(__dirname + 'public/js'))
+
+// set views
+app.set('views', './views')
+app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
-    res.status(200).json({ message: 'initial page' })
+    res.status(200).render('index')
 })
 
 const DB_USER = process.env.DB_USER
