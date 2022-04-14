@@ -4,20 +4,25 @@ const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
 
+const authRoute = require('./routes/authRoutes')
+
 const PORT = 5000
 
-// static files
+// Static files
 app.use(express.static('public'))
 app.use('/css', express.static(__dirname + 'public/css'))
 app.use('/js', express.static(__dirname + 'public/js'))
 
-// set views
+// Set views
 app.set('views', './views')
 app.set('view engine', 'ejs')
 
-app.get('/', (req, res) => {
-    res.status(200).render('index')
-})
+// JSON middlewares
+app.use(express.urlencoded());
+app.use(express.json());
+
+// Routes
+app.use('/auth', authRoute)
 
 const DB_USER = process.env.DB_USER
 const DB_PASSWORD = process.env.DB_PASSWORD

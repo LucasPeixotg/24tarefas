@@ -1,0 +1,16 @@
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+.error-message {
+    animation-name: fade-in;
+    animation-duration: 300ms;
+    animation-fill-mode: forwards;
+}
