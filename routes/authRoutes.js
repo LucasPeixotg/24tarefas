@@ -8,7 +8,27 @@ router.get('/register', (req, res) => {
 })
 
 router.get('/login', (req, res) => {
+    if(req.session.user) {
+        res.status(200).render('alreadyLogged', { username: req.session.user.username })
+    }
     res.status(200).render('login', { errorMessage: '' })
+})
+
+router.get('/logout', (req, res) => {
+    if(req.session.user) {  
+        req.session.destroy(error => {
+            if(error) console.log(error)
+
+            const { next } = req.query
+            if(next) res.redirect(next)
+            else res.redirect('/')
+        })
+    } else {
+        res.status(404).render('error', { 
+            code: 404,
+            message: "A página que você procura não existe"
+        })
+    }
 })
 
 router.post('/login', async (req, res) => {
@@ -17,10 +37,16 @@ router.post('/login', async (req, res) => {
     if(!username || !password) {
         return res.status(422).render('login', { errorMessage: "Preencha todos os campos" })
     }
-
+    
     const user = await User.findOne({ username })
     if(comparePasswordAndHash(password, user.password)) {
-        return res.status(200).render('home', { message: 'Bem vindo de volta' })
+        req.session.user = {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+        }
+        
+        res.redirect('/')
     } else {
         return res.status(401).render('login', { errorMessage: 'Nome de usuário ou senha incorretos' })
     }
