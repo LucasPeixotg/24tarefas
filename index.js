@@ -33,7 +33,6 @@ app.use(session({
 // Routes
 app.use('/auth', authRoute)
 
-
 // 404
 app.all('*', (req, res) => {
     res.status(404).render('error', { 

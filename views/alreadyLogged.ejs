@@ -19,7 +19,7 @@
           <p class="card-text">Você já está autenticado como <%= username %></p>
           <p class="card-text">Você precisa sair para então entrar como outro usuário.</p>
           <div class="d-flex justify-content-center">
-              <a href="/auth/logout?next=/auth/login" class="btn btn-danger m-2">Sair</a>
+              <a href="/auth/logout?next=<%= next %>" class="btn btn-danger m-2">Sair</a>
               <a href="/" class="btn btn-secondary m-2">Cancelar</a>
           </div>
         </div>

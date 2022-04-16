@@ -4,12 +4,21 @@ const { hashPassword, comparePasswordAndHash } = require('../utils/cryptography'
 const User = require('../models/User')
 
 router.get('/register', (req, res) => {
+    if(req.session.user) {
+        return res.status(200).render('alreadyLogged', { 
+            username: req.session.user.username,
+            next: 'register'
+        })
+    }
     res.status(200).render('register', { errorMessage: '' })
 })
 
 router.get('/login', (req, res) => {
     if(req.session.user) {
-        res.status(200).render('alreadyLogged', { username: req.session.user.username })
+        return res.status(200).render('alreadyLogged', { 
+            username: req.session.user.username,
+            next: 'login'
+        })
     }
     res.status(200).render('login', { errorMessage: '' })
 })
@@ -17,11 +26,16 @@ router.get('/login', (req, res) => {
 router.get('/logout', (req, res) => {
     if(req.session.user) {  
         req.session.destroy(error => {
-            if(error) console.log(error)
+            if(error) {
+                console.log(error)
+            } else {
+                res.status(200)
+                const { next } = req.query
+                if(next) res.redirect(next)
+                else res.redirect('/')
+            }
 
-            const { next } = req.query
-            if(next) res.redirect(next)
-            else res.redirect('/')
+
         })
     } else {
         res.status(404).render('error', { 
