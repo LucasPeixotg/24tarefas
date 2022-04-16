@@ -11,6 +11,5 @@
 
 .error-message {
     animation-name: fade-in;
-    animation-duration: 300ms;
-    animation-fill-mode: forwards;
+    animation-duration: 400ms;
 }

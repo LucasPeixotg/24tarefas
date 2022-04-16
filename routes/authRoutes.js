@@ -1,58 +1,65 @@
 const router = require('express').Router()
+
+const { hashPassword, comparePasswordAndHash } = require('../utils/cryptography')
 const User = require('../models/User')
 
 router.get('/register', (req, res) => {
-    res.status(200).render('register', { message: '' })
+    res.status(200).render('register', { errorMessage: '' })
 })
 
 router.get('/login', (req, res) => {
-    res.status(200).render('login')
+    res.status(200).render('login', { errorMessage: '' })
 })
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body
     
-    if(username===null || password===null) {
-        res.status(422).render('login', { message: 'missing required fields' })
-        return
+    if(!username || !password) {
+        return res.status(422).render('login', { errorMessage: "Preencha todos os campos" })
     }
 
-    const user = { username, password }
-    
-    try {
-        let userWithSameUsername = await User.findOne({ username: username })
-        if(userWithSameUsername) {
-            return res.status(422).json({ message: 'username is already taken' })
-        }
-        
-        await User.create(user)
-        res.status(200).json({ message: 'user created' })
-    } catch(error) {
-        res.status(500).json('could not create account')
+    const user = await User.findOne({ username })
+    if(comparePasswordAndHash(password, user.password)) {
+        return res.status(200).render('home', { message: 'Bem vindo de volta' })
+    } else {
+        return res.status(401).render('login', { errorMessage: 'Nome de usuário ou senha incorretos' })
     }
 })
 
 router.post('/register', async (req, res) => {
     const { username, email, password, confirmPassword} = req.body
-    
+
     if(!username || !password || !email || !confirmPassword) {
-        return res.status(422).render('register', { message: "Preencha todos os campos" })
+        return res.status(422).render('register', { errorMessage: "Preencha todos os campos" })
     } else if(confirmPassword!==password) {
-        return res.status(422).render('register', { message: "As senhas não conferem" })
+        return res.status(422).render('register', { errorMessage: "As senhas não conferem" })
     }
 
-    const user = { username, email, password }
-    
+    const user = { 
+        username, 
+        email, 
+        password: hashPassword(password)
+    }
+
     try {
-        let userWithSameUsername = await User.findOne({ username: username })
-        if(userWithSameUsername) {
-            return res.status(422).json({ message: 'username is already taken' })
+        // Email or username already taken validation
+        const sameUsername = await User.findOne({ username })
+        const sameEmail = await User.findOne({ email })
+
+        if(sameUsername && sameEmail) {
+            return res.status(422).render('register', { errorMessage: 'O nome de usuário e o email já estão em uso' })
+        } else if(sameUsername) {
+            return res.status(422).render('register', { errorMessage: 'O nome de usuário já está em uso' })
+        } else if(sameEmail) {
+            return res.status(422).render('register', { errorMessage: 'O email já está em uso' })
         }
-        
+
+        // Sign-up successful
         await User.create(user)
-        res.status(200).json({ message: 'user created' })
+        res.status(200).render('home', { message: 'Usuário criado com sucesso' })
+
     } catch(error) {
-        res.status(500).json('could not create account')
+        res.status(500).render('register', { errorMessage: 'Não foi possível criar o usuário. Por favor, tente novamente mais tarde.'})
     }
 })
 
