@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
     }
     
     const user = await User.findOne({ username })
-    if(comparePasswordAndHash(password, user.password)) {
+    if(user && comparePasswordAndHash(password, user.password)) {
         req.session.user = {
             _id: user._id,
             username: user.username,
