@@ -5,22 +5,22 @@ const User = require('../models/User')
 
 router.get('/register', (req, res) => {
     if(req.session.user) {
-        return res.status(200).render('alreadyLogged', { 
+        return res.status(200).render('auth/alreadyLogged', { 
             username: req.session.user.username,
             next: 'register'
         })
     }
-    res.status(200).render('register', { errorMessage: '' })
+    res.status(200).render('auth/register', { errorMessage: '' })
 })
 
 router.get('/login', (req, res) => {
     if(req.session.user) {
-        return res.status(200).render('alreadyLogged', { 
+        return res.status(200).render('auth/alreadyLogged', { 
             username: req.session.user.username,
             next: 'login'
         })
     }
-    res.status(200).render('login', { errorMessage: '' })
+    res.status(200).render('auth/login', { errorMessage: '' })
 })
 
 router.get('/logout', (req, res) => {
@@ -49,7 +49,7 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body
     
     if(!username || !password) {
-        return res.status(422).render('login', { errorMessage: "Preencha todos os campos" })
+        return res.status(422).render('auth/login', { errorMessage: "Preencha todos os campos" })
     }
     
     const user = await User.findOne({ username })
@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
         
         res.redirect('/')
     } else {
-        return res.status(401).render('login', { errorMessage: 'Nome de usuário ou senha incorretos' })
+        return res.status(401).render('auth/login', { errorMessage: 'Nome de usuário ou senha incorretos' })
     }
 })
 
@@ -70,9 +70,9 @@ router.post('/register', async (req, res) => {
     const { username, email, password, confirmPassword} = req.body
 
     if(!username || !password || !email || !confirmPassword) {
-        return res.status(422).render('register', { errorMessage: "Preencha todos os campos" })
+        return res.status(422).render('auth/register', { errorMessage: "Preencha todos os campos" })
     } else if(confirmPassword!==password) {
-        return res.status(422).render('register', { errorMessage: "As senhas não conferem" })
+        return res.status(422).render('auth/register', { errorMessage: "As senhas não conferem" })
     }
 
     const user = { 
@@ -87,19 +87,19 @@ router.post('/register', async (req, res) => {
         const sameEmail = await User.findOne({ email })
 
         if(sameUsername && sameEmail) {
-            return res.status(422).render('register', { errorMessage: 'O nome de usuário e o email já estão em uso' })
+            return res.status(422).render('auth/register', { errorMessage: 'O nome de usuário e o email já estão em uso' })
         } else if(sameUsername) {
-            return res.status(422).render('register', { errorMessage: 'O nome de usuário já está em uso' })
+            return res.status(422).render('auth/register', { errorMessage: 'O nome de usuário já está em uso' })
         } else if(sameEmail) {
-            return res.status(422).render('register', { errorMessage: 'O email já está em uso' })
+            return res.status(422).render('auth/register', { errorMessage: 'O email já está em uso' })
         }
 
         // Sign-up successful
         await User.create(user)
-        res.status(200).render('home', { message: 'Usuário criado com sucesso' })
-
+        res.redirect('/')
+        
     } catch(error) {
-        res.status(500).render('register', { errorMessage: 'Não foi possível criar o usuário. Por favor, tente novamente mais tarde.'})
+        res.status(500).render('auth/register', { errorMessage: 'Não foi possível criar o usuário. Por favor, tente novamente mais tarde.'})
     }
 })
 
