@@ -5,7 +5,12 @@ const mongoose = require('mongoose')
 const session = require('express-session')
 const app = express()
 
-const authRoute = require('./routes/authRoutes')
+const authRoutes = require('./routes/authRoutes')
+const taskRoutes = require('./routes/taskRoutes')
+
+const loginRequired = require('./middlewares/loginRequired')
+const Task = require('./models/Task')
+const { sortTasksByDoneAndDate } = require('./utils/sortTasks')
 
 const PORT = 5000
 
@@ -30,8 +35,17 @@ app.use(session({
 }))
 
 
+// Home Route
+app.get('/', loginRequired, async (req, res) => {
+    const tasks = await Task.find({ userId: req.session.user._id })
+    tasks.sort(sortTasksByDoneAndDate)
+    res.status(200).render('home', { tasks })
+})
+
+
 // Routes
-app.use('/auth', authRoute)
+app.use('/auth', authRoutes)
+app.use('/tasks', taskRoutes)
 
 // 404
 app.all('*', (req, res) => {
@@ -40,7 +54,6 @@ app.all('*', (req, res) => {
         message: "A página que você procura não existe"
     })
 })
-
 
 // DB credentials
 const DB_USER = process.env.DB_USER

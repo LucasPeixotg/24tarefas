@@ -81,26 +81,36 @@ router.post('/register', async (req, res) => {
         password: hashPassword(password)
     }
 
+    // Email or username already taken validation
+    const sameUsername = await User.findOne({ username })
+    const sameEmail = await User.findOne({ email })
+
+    if(sameUsername && sameEmail) {
+        return res.status(422).render('auth/register', { errorMessage: 'O nome de usuário e o email já estão em uso' })
+    } else if(sameUsername) {
+        return res.status(422).render('auth/register', { errorMessage: 'O nome de usuário já está em uso' })
+    } else if(sameEmail) {
+        return res.status(422).render('auth/register', { errorMessage: 'O email já está em uso' })
+    }
+
+    // Validation successful
     try {
-        // Email or username already taken validation
-        const sameUsername = await User.findOne({ username })
-        const sameEmail = await User.findOne({ email })
-
-        if(sameUsername && sameEmail) {
-            return res.status(422).render('auth/register', { errorMessage: 'O nome de usuário e o email já estão em uso' })
-        } else if(sameUsername) {
-            return res.status(422).render('auth/register', { errorMessage: 'O nome de usuário já está em uso' })
-        } else if(sameEmail) {
-            return res.status(422).render('auth/register', { errorMessage: 'O email já está em uso' })
-        }
-
-        // Sign-up successful
         await User.create(user)
         res.redirect('/')
-        
     } catch(error) {
         res.status(500).render('auth/register', { errorMessage: 'Não foi possível criar o usuário. Por favor, tente novamente mais tarde.'})
     }
 })
+
+
+// 404
+router.all('*', (req, res) => {
+    res.status(404).render('error', { 
+        code: 404,
+        message: "A página que você procura não existe"
+    })
+})
+
+
 
 module.exports = router
