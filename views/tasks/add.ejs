@@ -8,11 +8,14 @@
     <link rel="stylesheet" href="/css/form.css">
     <title>Taskist</title>
 </head>
-<body>
-    <form action="/tasks/add" method="post" class="container p-5 w-50">
-        <p class="text-danger error-message">
-            <%= errorMessage %>
-        </p>
+<body class="d-flex flex-column align-items-center justify-content-center pb-5">
+    <h1 class="mb-5">Criar Tarefa</h1>
+    <form action="/auth/login" method="post" class="card p-3 w-25 mb-5">
+        <% if(errorMessage) { %>
+            <p class="text-danger error-message">
+                <%= errorMessage %>
+            </p>
+        <% } %>
         <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Tarefa</label>
             <input type="text" name="title" class="form-control" id="title" placeholder="Digite a tarefa"/>
@@ -21,7 +24,7 @@
             <label for="exampleFormControlInput1" class="form-label">Data de finalização</label>
             <input type="date" name="dueDate" class="form-control" id="dueDate" placeholder="Data de finalização"/>
         </div>
-        <input type="submit" value="Adicionar" class="btn btn-success">
+        <input type="submit" value="Adicionar" class="btn btn-primary">
     </form>
 </body>
 </html>

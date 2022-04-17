@@ -8,11 +8,14 @@
     <link rel="stylesheet" href="/css/form.css">
     <title>Taskist</title>
 </head>
-<body>
-    <form action="/auth/register" method="post" class="container p-5 w-50">
-        <p class="text-danger error-message">
-            <%= errorMessage %>
-        </p>
+<body class="d-flex flex-column align-items-center justify-content-center pb-5">
+    <h1 class="mb-5">Cadastre-se</h1>
+    <form action="/auth/login" method="post" class="card p-3 w-25 mb-5">
+        <% if(errorMessage) { %>
+            <p class="text-danger error-message">
+                <%= errorMessage %>
+            </p>
+        <% } %>
         <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Nome de usuário</label>
             <input type="text" name="username" class="form-control" id="username" placeholder="Digite seu nome de usuário"/>
@@ -29,7 +32,8 @@
             <label for="exampleFormControlInput1" class="form-label">Confirmar Senha</label>
             <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" placeholder="Confirmar senha"/>
         </div>
-        <input type="submit" value="Entrar" class="btn btn-primary">
+        <input type="submit" value="Criar conta" class="btn btn-primary mt-3">
+        <p class="text-center mt-3">Já possui uma conta? Entre <a href="/auth/login">AQUI</a></p>
     </form>
 </body>
 </html>
