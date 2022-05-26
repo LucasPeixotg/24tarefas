@@ -12,7 +12,7 @@ const loginRequired = require('./middlewares/loginRequired')
 const Task = require('./models/Task')
 const { sortTasksByDoneAndDate } = require('./utils/sortTasks')
 
-const PORT = 5000
+const PORT = 3000
 
 // Static files
 app.use(express.static('public'))
