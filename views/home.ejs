@@ -12,7 +12,7 @@
     <a href="/auth/logout" class="btn btn-danger m-3 logout-button">Sair</a>
     <h1 class="text-center mt-5 mb-3">Tarefas</h1>
     <% if(tasks.length) { %>
-        <ul class="list-group w-50 m-auto">
+        <ul class="list-group m-auto col-md-6 col-lg-4 col-12 px-2">
         <% tasks.forEach(task => { %>
             <% if(task.done) { %>
                 <li class="list-group-item list-group-item-done list-group-item-light d-flex justify-content-between">
@@ -25,14 +25,14 @@
                 <li class="list-group-item d-flex justify-content-between">
                     <a href="/tasks/complete/<%= task._id %>" class="border border-secondary border-2 rounded-circle action-icon"></a>
             <% } %>
-                <p class="my-auto mx-2 text-start w-100">
+                <p class="my-auto mx-2 text-start">
                     <%= task.title %>
                 </p>
-                <a href="/tasks/delete/<%= task._id %>" class="action-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-trash-fill text-danger" viewBox="0 0 16 16">
-                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                    </svg>
-                </a>
+                <span>
+                    <%= Math.trunc((task.deleteDate - Date.now()) / (60*60*1000)) %> 
+                    : 
+                    <%= Math.trunc(((task.deleteDate - Date.now()) / (60*60*1000) - Math.trunc((task.deleteDate - Date.now()) / (60*60*1000))) * 60) %>
+                </span>
             </li>
         <% }) %>
         </ul>

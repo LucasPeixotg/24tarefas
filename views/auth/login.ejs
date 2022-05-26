@@ -10,7 +10,7 @@
 </head>
 <body class="d-flex flex-column align-items-center justify-content-center pb-5">
     <h1 class="mb-5">Login</h1>
-    <form action="/auth/login" method="post" class="card p-3 w-25 mb-5">
+    <form action="/auth/login" method="post" class="p-3 col-md-6 col-lg-4 col-xl-3 col-12">
         <% if(errorMessage) { %>
             <p class="text-danger error-message">
                 <%= errorMessage %>
@@ -24,7 +24,7 @@
             <label for="exampleFormControlInput1" class="form-label">Senha</label>
             <input type="password" name="password" class="form-control" id="password" placeholder="Digite sua senha"/>
         </div>
-        <input type="submit" value="Entrar" class="btn btn-primary mt-3">
+        <input type="submit" value="Entrar" class="btn btn-primary mt-3 w-100">
         <p class="text-center mt-3">Ainda não tem uma conta? Cadastre-se <a href="/auth/register">AQUI</a></p>
     </form>
 </body>

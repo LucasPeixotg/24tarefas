@@ -9,16 +9,15 @@ router.get('/add', loginRequired, (req, res) => {
 })
 
 router.post('/add', loginRequired, async (req, res) => {
-    const { title, dueDate } = req.body
+    const { title } = req.body
 
-    if(!title || !dueDate) {
-        return res.status(422).render('tasks/add', { errorMessage: 'Preencha todos os campos' })
+    if(!title) {
+        return res.status(422).render('tasks/add', { errorMessage: 'Preencha o título' })
     }
 
     const task = {
         userId: req.session.user._id,
         title,
-        dueDate 
     }
 
     try {

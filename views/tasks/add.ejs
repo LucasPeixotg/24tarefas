@@ -10,7 +10,7 @@
 </head>
 <body class="d-flex flex-column align-items-center justify-content-center pb-5">
     <h1 class="mb-5">Criar Tarefa</h1>
-    <form action="/auth/login" method="post" class="card p-3 w-25 mb-5">
+    <form action="/tasks/add" method="post" class="p-3 col-md-6 col-lg-4 col-xl-3 col-12">
         <% if(errorMessage) { %>
             <p class="text-danger error-message">
                 <%= errorMessage %>
@@ -21,10 +21,12 @@
             <input type="text" name="title" class="form-control" id="title" placeholder="Digite a tarefa"/>
         </div>
         <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Data de finalização</label>
-            <input type="date" name="dueDate" class="form-control" id="dueDate" placeholder="Data de finalização"/>
+            <span class="d-flex align-items-center justify-content-between flex-row">
+                <p>Data de finalização</p>
+                <p>Amanhã <%= new Date(Date.now() + 24*60*60*1000).toString().substring(16, 21) %></p>
+            </span>
         </div>
-        <input type="submit" value="Adicionar" class="btn btn-primary">
+        <input type="submit" value="Adicionar" class="btn btn-primary w-100">
     </form>
 </body>
 </html>

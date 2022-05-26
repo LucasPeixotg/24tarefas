@@ -13,8 +13,9 @@ const TaskSchema = mongoose.Schema({
         type: mongoose.SchemaTypes.Boolean,
         default: false,
     },
-    dueDate: {
-        type: mongoose.SchemaTypes.Date,
+    deleteDate: {
+        type: Date,
+        default: Date.now() + 24*60*60*1000 // 24 hours from now
     }
 })
 

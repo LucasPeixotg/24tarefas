@@ -37,8 +37,11 @@ app.use(session({
 
 // Home Route
 app.get('/', loginRequired, async (req, res) => {
+    await Task.deleteMany({ deleteDate: {$lt: Date.now()-5} })
+    
     const tasks = await Task.find({ userId: req.session.user._id })
     tasks.sort(sortTasksByDoneAndDate)
+
     res.status(200).render('home', { tasks })
 })
 
@@ -60,9 +63,9 @@ const DB_USER = process.env.DB_USER
 const DB_PASSWORD = process.env.DB_PASSWORD
 
 // connects to the database and start listening
-mongoose.connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster-tasko.zowc0.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`)
+mongoose.connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster-tasko.zowc0.mongodb.net/?retryWrites=true&w=majority`)
     .then(() => {
         app.listen(PORT)
-        console.log(`Server stated, listening at port: ${PORT}`)
+        console.log(`Server started, listening at port: ${PORT}`)
     })
     .catch(error => console.log(error))

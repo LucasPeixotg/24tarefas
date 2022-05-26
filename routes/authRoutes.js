@@ -96,7 +96,7 @@ router.post('/register', async (req, res) => {
     // Validation successful
     try {
         await User.create(user)
-        res.redirect('/')
+        res.redirect('/auth/login')
     } catch(error) {
         res.status(500).render('auth/register', { errorMessage: 'Não foi possível criar o usuário. Por favor, tente novamente mais tarde.'})
     }
