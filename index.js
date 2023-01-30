@@ -12,7 +12,7 @@ const loginRequired = require('./middlewares/loginRequired')
 const Task = require('./models/Task')
 const { sortTasksByDoneAndDate } = require('./utils/sortTasks')
 
-const PORT = 3000
+const PORT = process.env.PORT || 8080
 
 // Static files
 app.use(express.static('public'))
@@ -59,13 +59,13 @@ app.all('*', (req, res) => {
 })
 
 // DB credentials
-const DB_USER = process.env.DB_USER
-const DB_PASSWORD = process.env.DB_PASSWORD
+const uri = process.env.DB_URI
 
 // connects to the database and start listening
-mongoose.connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster-tasko.zowc0.mongodb.net/?retryWrites=true&w=majority`)
+mongoose.connect(uri)
     .then(() => {
-        app.listen(PORT)
-        console.log(`Server started, listening at port: ${PORT}`)
+        app.listen(PORT, () => {
+            console.log(`Server started, listening at port: ${PORT}`)
+        })
     })
     .catch(error => console.log(error))
